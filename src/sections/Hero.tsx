@@ -3,7 +3,6 @@ import {
   motion,
   useScroll,
   useTransform,
-  useMotionTemplate,
   useMotionValue,
   useSpring,
 } from "framer-motion"
@@ -33,9 +32,8 @@ function ScriptName({ text, delay }: { text: string; delay: number }) {
 
 /**
  * HERO — Sushmita & Bhaskar.
- * Replaces the illustrated Ghibli effect with the couple's real traditional portrait.
- * Pointer parallax on desktop; on scroll the opening portrait transitions
- * smoothly to reveal the couple's royal palace & casual portraits.
+ * Opening first photo is immediately visible on page load.
+ * On scroll down, it gracefully transitions to reveal royal palace & casual portraits.
  */
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null)
@@ -49,10 +47,10 @@ export default function Hero() {
   const my = useMotionValue(0)
   const sx = useSpring(mx, { stiffness: 60, damping: 18, mass: 0.6 })
   const sy = useSpring(my, { stiffness: 60, damping: 18, mass: 0.6 })
-  const cardPX = useTransform(sx, (v) => v * 16)
-  const cardPY = useTransform(sy, (v) => v * 12)
-  const glowX = useTransform(sx, (v) => v * 30)
-  const glowY = useTransform(sy, (v) => v * 20)
+  const cardPX = useTransform(sx, (v) => v * 14)
+  const cardPY = useTransform(sy, (v) => v * 10)
+  const glowX = useTransform(sx, (v) => v * 28)
+  const glowY = useTransform(sy, (v) => v * 18)
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return
@@ -64,21 +62,20 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [mx, my])
 
-  /* ── scroll morph ────────────────────────────────────────── */
-  const firstPhotoOpacity = useTransform(p, [0.28, 0.64], [1, 0])
-  const firstPhotoBlur = useTransform(p, [0.28, 0.64], [0, 10])
-  const firstPhotoFilter = useMotionTemplate`blur(${firstPhotoBlur}px)`
-  const firstPhotoScale = useTransform(p, [0.28, 0.64], [1, 0.92])
-  const firstPhotoY = useTransform(p, [0.28, 0.64], [0, -30])
+  /* ── scroll morph (crisp, hardware-accelerated transitions) ── */
+  /* First photo is 100% visible at the top (0 to 0.32), then gently transitions */
+  const firstPhotoOpacity = useTransform(p, [0.32, 0.68], [1, 0])
+  const firstPhotoScale = useTransform(p, [0.32, 0.68], [1, 0.92])
+  const firstPhotoY = useTransform(p, [0.32, 0.68], [0, -25])
+  const firstPhotoPointer = useTransform(p, (v) => (v < 0.5 ? "auto" : "none"))
 
-  /* other couple portraits bloom into view */
-  const secondPhotoOpacity = useTransform(p, [0.48, 0.82], [0, 1])
-  const secondPhotoScale = useTransform(p, [0.48, 0.92], [0.9, 1])
-  const secondPhotoY = useTransform(p, [0.48, 0.88], [40, 0])
-  const secondPhotoBlur = useTransform(p, [0.48, 0.80], [12, 0])
-  const secondPhotoFilter = useMotionTemplate`blur(${secondPhotoBlur}px)`
+  /* Scrolled portraits bloom into view from 0.45 onwards */
+  const secondPhotoOpacity = useTransform(p, [0.45, 0.82], [0, 1])
+  const secondPhotoScale = useTransform(p, [0.45, 0.88], [0.92, 1])
+  const secondPhotoY = useTransform(p, [0.45, 0.88], [30, 0])
+  const secondPhotoPointer = useTransform(p, (v) => (v >= 0.5 ? "auto" : "none"))
 
-  /* header + footer text */
+  /* Header + footer text scroll transitions */
   const topTextY = useTransform(p, [0, 0.38], [0, -50])
   const topTextOpacity = useTransform(p, [0, 0.32], [1, 0])
   const bottomTextY = useTransform(p, [0, 0.3], [0, 30])
@@ -90,7 +87,7 @@ export default function Hero() {
   return (
     <section ref={ref} className="relative h-[200vh]">
       <div className="sticky top-0 flex h-screen flex-col items-center justify-between overflow-hidden px-4 pb-6 pt-7 sm:px-6 sm:pb-8 sm:pt-10">
-        {/* warm romantic glow that follows pointer */}
+        {/* Warm romantic glow that follows pointer */}
         <motion.div
           style={{ x: glowX, y: glowY }}
           className="pointer-events-none absolute left-1/2 top-[38%] h-[60vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,hsl(38_75%_80%/0.55),transparent)] blur-3xl"
@@ -104,7 +101,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 14, letterSpacing: "0.2em" }}
             animate={{ opacity: 1, y: 0, letterSpacing: "0.42em" }}
-            transition={{ duration: 1.4, delay: 0.3, ease: EASE }}
+            transition={{ duration: 1.4, delay: 0.2, ease: EASE }}
             className="flex items-center gap-2"
           >
             <Sparkles className="h-3 w-3 text-gold/80" />
@@ -114,36 +111,35 @@ export default function Hero() {
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: EASE }}
+            transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
             className="gold-hairline w-28"
           />
         </motion.div>
 
         {/* ── THE COUPLE (Opening Portrait & Scroll Reveal) ──────── */}
         <div className="relative flex w-full max-w-lg flex-1 items-center justify-center py-2">
-          {/* Opening First Photo: Traditional Stone Pillars Portrait */}
+          {/* Opening First Photo: Traditional Stone Pillars Portrait (Immediately Visible) */}
           <motion.div
             style={{
               opacity: firstPhotoOpacity,
-              filter: firstPhotoFilter,
               scale: firstPhotoScale,
               y: firstPhotoY,
               x: cardPX,
+              pointerEvents: firstPhotoPointer,
             }}
-            initial={{ opacity: 0, y: 28, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.7, ease: EASE }}
-            className="relative flex h-[46vh] max-h-[430px] min-h-[260px] items-center justify-center"
+            className="relative z-10 flex h-[48vh] max-h-[440px] min-h-[280px] items-center justify-center"
           >
             <motion.div
               style={{ y: cardPY }}
-              className="group relative h-full aspect-[2/3] overflow-hidden rounded-t-[72px] rounded-b-2xl border border-gold/45 bg-ivory/90 p-2 shadow-2xl ring-1 ring-gold/20 sm:rounded-t-[90px] sm:p-2.5"
+              className="group relative h-full aspect-[2/3] overflow-hidden rounded-t-[72px] rounded-b-2xl border-2 border-gold/45 bg-ivory/95 p-2 shadow-2xl ring-1 ring-gold/25 sm:rounded-t-[90px] sm:p-2.5"
             >
               {/* Gold inner filigree border */}
-              <div className="relative h-full w-full overflow-hidden rounded-t-[64px] rounded-b-xl sm:rounded-t-[82px]">
+              <div className="relative h-full w-full overflow-hidden rounded-t-[64px] rounded-b-xl sm:rounded-t-[82px] bg-cream">
                 <img
                   src={config.hero.firstPhoto}
                   alt={`${config.couple.brideShort} & ${config.couple.groomShort}`}
+                  loading="eager"
+                  fetchPriority="high"
                   className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 {/* Subtle vignette and warm lighting */}
@@ -159,9 +155,9 @@ export default function Hero() {
               opacity: secondPhotoOpacity,
               scale: secondPhotoScale,
               y: secondPhotoY,
-              filter: secondPhotoFilter,
+              pointerEvents: secondPhotoPointer,
             }}
-            className="absolute inset-0 flex items-center justify-center gap-3 sm:gap-5"
+            className="absolute inset-0 z-20 flex items-center justify-center gap-3 sm:gap-5"
           >
             {[
               {
@@ -183,6 +179,7 @@ export default function Hero() {
                   <img
                     src={item.src}
                     alt={item.alt}
+                    loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-gold/20" />
@@ -195,7 +192,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* date · tagline · names */}
+        {/* Date · Tagline · Names */}
         <motion.div
           style={{ y: bottomTextY, opacity: bottomTextOpacity }}
           className="relative z-10 flex flex-col items-center gap-1.5 text-center"
@@ -203,7 +200,7 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.3 }}
+            transition={{ duration: 1, delay: 0.8 }}
             className="font-body text-[0.68rem] uppercase tracking-[0.3em] text-muted-foreground"
           >
             {config.displayDate}
@@ -211,26 +208,26 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.1, delay: 1.5 }}
+            transition={{ duration: 1.1, delay: 1.0 }}
             className="font-serif text-lg italic text-ink/80 sm:text-xl"
           >
             “{tagline1} {tagline2}”
           </motion.p>
           <h1 className="mt-1 font-script text-5xl leading-tight text-ink sm:text-6xl">
-            <ScriptName text={config.couple.brideShort} delay={1.65} />
+            <ScriptName text={config.couple.brideShort} delay={1.1} />
             <motion.span
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 2.1, ease: EASE }}
+              transition={{ duration: 0.7, delay: 1.5, ease: EASE }}
               className="mx-3 inline-block font-serif text-3xl italic text-gold sm:text-4xl"
             >
               &
             </motion.span>
-            <ScriptName text={config.couple.groomShort} delay={2.2} />
+            <ScriptName text={config.couple.groomShort} delay={1.6} />
           </h1>
         </motion.div>
 
-        {/* scroll cue */}
+        {/* Scroll cue */}
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-1.5 left-1/2 -translate-x-1/2">
           <motion.div
             animate={{ y: [0, 7, 0] }}
