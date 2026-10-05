@@ -128,7 +128,7 @@ const config: InvitationConfig = {
     brideShort: "Sushmita",
     groomShort: "Bhaskar",
   },
-  weddingDate: "2026-11-25T11:00:00+05:30",
+  weddingDate: "2026-11-25T17:00:00+05:30",
   receptionDate: "2026-11-28T18:00:00+05:30",
   displayDate: "Wednesday, November 25th, 2026",
   tagline: "Two souls, two hearts, one sacred celebration.\nForever begins now.",
@@ -145,9 +145,9 @@ const config: InvitationConfig = {
   },
   story: [
     {
-      title: "When Two Hearts Met",
-      date: "The First Chapter",
-      text: "A quiet moment, a shared smile, and conversations that felt effortlessly familiar. What started as an introduction blossomed into a deep connection neither could imagine life without.",
+      title: "The First Chapter",
+      date: "October 2022",
+      text: "The story began during Durga Pujo 2022, celebrating the festive month with friends, away from their families.\nIn each other, they found a little family away from family.",
     },
     {
       title: "Growing Together",
@@ -170,7 +170,7 @@ const config: InvitationConfig = {
       title: "The Wedding Ceremony",
       date: "Wednesday, 25th November 2026",
       venue: "Nepali Puja Mandap, Akongre, Tura, Meghalaya - 794001",
-      time: "11:00 AM onwards",
+      time: "5:00 PM onwards",
       note: "Cordially inviting you with your family to bless the sacred union",
       mapUrl: "https://maps.app.goo.gl/v7Ew9Vvw5KYkpBv8A",
     },
@@ -192,7 +192,7 @@ const config: InvitationConfig = {
     wedding: {
       name: "Nepali Puja Mandap",
       date: "Wednesday, 25th November 2026",
-      time: "11:00 AM onwards",
+      time: "5:00 PM onwards",
       address: "Akongre, Tura, Meghalaya - 794001",
       mapQuery: "Nepali Puja Mandap, Akongre, Tura, Meghalaya 794001",
       mapUrl: "https://maps.app.goo.gl/v7Ew9Vvw5KYkpBv8A",
@@ -210,36 +210,28 @@ const config: InvitationConfig = {
   },
   gallery: [
     {
-      src: "/images/couple-hero.png",
-      alt: "Sushmita & Bhaskar · Heritage Stone Arcade Romance",
+      src: "/images/gallery-red-gown.png",
+      alt: "Sushmita & Bhaskar · Evening Elegance & Warm Embrace",
     },
     {
       src: "/images/couple-royal.jpg",
       alt: "Sushmita & Bhaskar · Royal Palace Elegance in Scarlet & Black",
     },
     {
+      src: "/images/gallery-cafe-night.jpg",
+      alt: "Sushmita & Bhaskar · Sparkling Evenings & Cherished Moments",
+    },
+    {
       src: "/images/couple-casual.jpg",
       alt: "Sushmita & Bhaskar · Sunshine & Sweet Memories",
     },
     {
-      src: "/images/gallery-royal-portrait.jpg",
-      alt: "Sushmita & Bhaskar · A Royal Glance",
+      src: "/images/gallery-valentines.jpg",
+      alt: "Sushmita & Bhaskar · A Valentine to Remember",
     },
     {
-      src: "/images/gallery-traditional-portrait.jpg",
-      alt: "Sushmita & Bhaskar · Traditional Splendour & Grace",
-    },
-    {
-      src: "/images/gallery-casual-portrait.jpg",
-      alt: "Sushmita & Bhaskar · Hand in Hand Towards Forever",
-    },
-    {
-      src: "/images/family-bride.jpg",
-      alt: "The Bride's Loving Family · Sujit & Swarna Paul Choudhury with Sushmita",
-    },
-    {
-      src: "/images/family-groom.jpg",
-      alt: "The Groom's Loving Family · Prabhat, Maya & Debjani Mondal with Bhaskar",
+      src: "/images/gallery-dinner-date.jpg",
+      alt: "Sushmita & Bhaskar · Cozy Dinners & Shared Smiles",
     },
   ],
   families: {
@@ -269,8 +261,8 @@ const config: InvitationConfig = {
     durationHours: 5,
   },
   music: {
-    src: "",
-    label: "Our Song",
+    src: "https://youtu.be/e8dLwwJ1dsE?si=pSLQBcHFUyfljVHF",
+    label: "Ullam Paadum · 2 States",
   },
   theme: {
     gold: "#b98a4e",
